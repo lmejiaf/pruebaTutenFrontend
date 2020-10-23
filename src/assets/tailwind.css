@@ -17,3 +17,10 @@
 .card {
     @apply rounded overflow-hidden shadow-lg;
 }
+
+.inputBig{
+    @apply rounded-full w-11/12 h-16 px-4 font-bold shadow-lg text-2xl;
+}
+.btnBig{
+    @apply rounded-full w-11/12 h-16 px-4 font-bold shadow-lg text-2xl bg-green-600;
+}

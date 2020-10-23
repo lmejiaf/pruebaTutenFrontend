@@ -19229,6 +19229,31 @@ video {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+.inputBig{
+  border-radius: 9999px;
+  width: 91.666667%;
+  height: 4rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 700;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  font-size: 1.5rem;
+}
+
+.btnBig{
+  border-radius: 9999px;
+  width: 91.666667%;
+  height: 4rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 700;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  font-size: 1.5rem;
+  --bg-opacity: 1;
+  background-color: #38a169;
+  background-color: rgba(56, 161, 105, var(--bg-opacity));
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
