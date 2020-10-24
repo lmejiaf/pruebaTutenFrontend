@@ -3,15 +3,15 @@ import { put, take, call, all, takeEvery, fork } from 'redux-saga/effects';
 import axios from "axios"
 
 //actiontypes
-import { PROBLEMA2 } from "./actionTypes"
+import { PROBLEMA2, PROBLEMA3 } from "./actionTypes"
 
 
 //actions
-import { problema2Failed, problema2Success } from "./actions"
+import { problema2Failed, problema2Success, problema3Failed, problema3Success } from "./actions"
 
 
 
-//apicall
+
 
 
 //sagas
@@ -25,44 +25,13 @@ function* fetchConversion({ payload }) {
 
     console.log(payload);
 
-    // axios.post("http://localhost:9100/problema2/convertir", payload)
-    // const response = yield call(
-    //     axios.post,
-    //     ["http://localhost:9100/problema2/convertir", payload, {
-    //         headers: {
 
-    //             'Content-Type': 'application/json',
-    //             "Access-Control-Allow-Origin": "*",
-    //         }
-    //     }]
-
-    // )
-
-    // const respone;
-
-    // const apiCall = () => {
-    //     return axios.post('http://localhost:9100/problema2/convertir',
-    //         payload,// only if not an object. Otherwise don't use outer {},
-    //         {
-    //             headers: {
-
-
-    //                 'Content-Type': 'application/json',
-    //                 "Access-Control-Allow-Origin": "*",
-
-    //             }
-    //         },
-    //     ).then(response => response = response.data)
-    //         .catch(err => {
-    //             throw err;
-    //         });
-    // }
 
     try {
 
         const response = yield call(() =>
             axios.post('http://localhost:9100/problema2/convertir',
-                payload,// only if not an object. Otherwise don't use outer {},
+                payload, // only if not an object. Otherwise don't use outer {},
                 {
                     headers: {
 
@@ -83,6 +52,72 @@ function* fetchConversion({ payload }) {
     }
 
 }
+function* fetchToken({ payload }) {
+
+    console.log("el token:" + payload);
+
+
+
+    try {
+
+        const user = yield call(() =>
+            axios.put('https://dev.tuten.cl/TutenREST/rest/user/' + payload.email.replace("@", "%40"),
+                payload,// only if not an object. Otherwise don't use outer {},
+                {
+                    headers: {
+
+
+                        'Content-Type': 'application/json',
+                        'App': 'APP_BCK',
+                        'Accept': 'application/json',
+                        'Password': payload.password
+
+                    }
+                },
+            ))
+
+
+
+
+        const bookings = yield call(() =>
+            axios.get('https://dev.tuten.cl/TutenREST/rest/user/' + "contacto@tuten.cl".replace("@", "%40") + "/bookings",
+                {
+                    params: {
+                        current: true,
+                    },
+                    headers: {
+
+
+                        'Content-Type': 'application/json',
+                        'App': 'APP_BCK',
+                        'Accept': 'application/json',
+                        'Token': user.data.sessionTokenBck,
+                        'Adminemail': payload.email
+
+                    }
+                },// only if not an object. Otherwise don't use outer {},
+
+            ))
+
+
+
+        const response = {
+            token: user.data.sessionTokenBck,
+            bookings: bookings.data
+        }
+
+        yield put(problema3Success(response));
+
+
+
+
+    } catch (error) {
+        yield put(problema3Failed(error))
+        console.log(error);
+    }
+
+
+}
 
 
 
@@ -92,6 +127,7 @@ function* fetchConversion({ payload }) {
 export default function* rootSaga() {
     yield all([
         takeEvery(PROBLEMA2.Fetching, fetchConversion),
+        takeEvery(PROBLEMA3.Fetching, fetchToken),
         // takeEvery(SALIDA.SOLICITUD, salir),
         // takeEvery(REGISTRO.SOLICITUD, registrar),
         // takeEvery(RECUPERAR.SOLICITUD, recuperar_pwd),
